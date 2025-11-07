@@ -1,0 +1,42 @@
+import { useEffect } from 'react';
+import { useAppStore } from './store/appStore';
+import { templates } from './templates';
+import Header from './components/Header';
+import TemplateGallery from './components/TemplateGallery';
+import WorkflowEditor from './components/WorkflowEditor';
+import ChatInterface from './components/ChatInterface';
+import ConsolePanel from './components/ConsolePanel';
+
+function App() {
+  const { currentWorkflow, editorMode } = useAppStore();
+
+  useEffect(() => {
+    // Initialize templates on app load
+    useAppStore.setState({ templates });
+  }, []);
+
+  return (
+    <div className="flex flex-col h-screen bg-gray-50">
+      <Header />
+      
+      <div className="flex-1 flex overflow-hidden">
+        {!currentWorkflow ? (
+          <TemplateGallery />
+        ) : (
+          <>
+            <div className="flex-1 flex flex-col">
+              {editorMode === 'visual' ? (
+                <WorkflowEditor />
+              ) : (
+                <ChatInterface />
+              )}
+            </div>
+            <ConsolePanel />
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default App;
