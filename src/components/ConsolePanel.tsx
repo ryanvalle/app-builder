@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../store/appStore';
 import { Play, ChevronDown, ChevronUp, AlertCircle, Info, AlertTriangle, Trash2 } from 'lucide-react';
+import { executeNode, buildExecutionOrder, ExecutionContext } from '../utils/workflowExecutor';
 
 const ConsolePanel: React.FC = () => {
   const { currentWorkflow, consoleLogs, clearConsoleLogs, addConsoleLog } = useAppStore();
@@ -16,25 +17,50 @@ const ConsolePanel: React.FC = () => {
     addConsoleLog('info', `Workflow: ${currentWorkflow.name}`);
     addConsoleLog('info', `Total nodes: ${currentWorkflow.nodes.length}`);
 
-    // Simulate execution
-    for (let i = 0; i < currentWorkflow.nodes.length; i++) {
-      const node = currentWorkflow.nodes[i];
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+    // Build execution order based on node connections
+    const orderedNodes = buildExecutionOrder(currentWorkflow.nodes, currentWorkflow.edges);
+    
+    // Initialize execution context
+    const context: ExecutionContext = {
+      variables: {},
+      results: {},
+    };
+
+    // Execute nodes in order
+    for (const node of orderedNodes) {
       addConsoleLog('info', `Executing node: ${node.data.label} (${node.type})`);
       
-      // Simulate different outcomes
-      if (node.type === 'api-call' && !node.data.config?.url) {
-        addConsoleLog('error', `Error in ${node.data.label}: API URL is not configured`);
-      } else if (node.type === 'ai-model' && !node.data.prompt) {
-        addConsoleLog('warning', `Warning in ${node.data.label}: No prompt configured, using default`);
-      } else {
-        addConsoleLog('info', `✓ ${node.data.label} completed successfully`);
+      try {
+        const result = await executeNode(node, context);
+        
+        if (result.success) {
+          addConsoleLog('info', `✓ ${node.data.label} completed successfully (${result.duration}ms)`);
+          
+          // Log output preview for debugging
+          const output = typeof result.output === 'string' 
+            ? result.output.substring(0, 200) 
+            : JSON.stringify(result.output).substring(0, 200);
+          addConsoleLog('info', `  Output: ${output}${output.length === 200 ? '...' : ''}`);
+        } else {
+          addConsoleLog('error', `✗ Error in ${node.data.label}: ${result.error}`);
+        }
+      } catch (error) {
+        addConsoleLog('error', `✗ Unexpected error in ${node.data.label}: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
 
     addConsoleLog('info', '=== Workflow Execution Completed ===');
+    
+    // Log final output
+    const finalOutput = Object.values(context.results).pop();
+    if (finalOutput) {
+      addConsoleLog('info', 'Final Output:');
+      const outputStr = typeof finalOutput === 'string' 
+        ? finalOutput 
+        : JSON.stringify(finalOutput, null, 2);
+      addConsoleLog('info', outputStr);
+    }
+    
     setIsExecuting(false);
   };
 
