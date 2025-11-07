@@ -31,7 +31,7 @@ const NodeConfigPanel: React.FC<NodeConfigPanelProps> = ({ node, onClose, onUpda
         ...(node.type === 'data-processing' && { code }),
         ...(node.type === 'api-call' && {
           config: {
-            id: node.data.config?.id || `api-${Date.now()}`,
+            id: node.data.config?.id || `api-${crypto.randomUUID()}`,
             name: label,
             url: apiUrl,
             method: apiMethod,
