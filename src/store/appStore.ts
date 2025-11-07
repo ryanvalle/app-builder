@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Workflow, WorkflowNode, WorkflowEdge, Template, ApiConfig, WorkflowExecution } from '../types/workflow';
+import { Workflow, WorkflowNode, WorkflowEdge, Template, ApiConfig, WorkflowExecution, ExecutionResult } from '../types/workflow';
 
 interface AppState {
   // Current workflow
@@ -38,7 +38,7 @@ interface AppState {
   deleteApiConfig: (id: string) => void;
   
   setCurrentExecution: (execution: WorkflowExecution | null) => void;
-  addExecutionResult: (result: any) => void;
+  addExecutionResult: (result: ExecutionResult) => void;
   
   addConsoleLog: (level: 'info' | 'error' | 'warning', message: string) => void;
   clearConsoleLogs: () => void;

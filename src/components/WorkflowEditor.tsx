@@ -11,6 +11,7 @@ import {
   Edge,
   Node,
   NodeTypes,
+  NodeChange,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useAppStore } from '../store/appStore';
@@ -52,8 +53,9 @@ const WorkflowEditor: React.FC = () => {
   );
 
   const onNodesChangeWrapper = useCallback(
-    (changes: any) => {
-      onNodesChange(changes);
+    (changes: NodeChange[]) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onNodesChange(changes as any);
       // Update store after a short delay to batch changes
       setTimeout(() => {
         updateNodes(nodes);
