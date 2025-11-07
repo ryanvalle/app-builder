@@ -71,7 +71,7 @@ const WorkflowEditor: React.FC = () => {
 
   const addNode = (type: WorkflowNode['type']) => {
     const newNode: WorkflowNode = {
-      id: `node-${Date.now()}`,
+      id: `node-${crypto.randomUUID()}`,
       type,
       position: { x: 250, y: 250 },
       data: {

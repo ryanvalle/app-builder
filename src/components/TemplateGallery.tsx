@@ -19,7 +19,7 @@ const TemplateGallery: React.FC = () => {
 
     const newWorkflow = {
       ...template.workflow,
-      id: `workflow-${Date.now()}`,
+      id: `workflow-${crypto.randomUUID()}`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -29,7 +29,7 @@ const TemplateGallery: React.FC = () => {
 
   const createBlankWorkflow = () => {
     const newWorkflow = {
-      id: `workflow-${Date.now()}`,
+      id: `workflow-${crypto.randomUUID()}`,
       name: 'New Workflow',
       description: 'A new workflow',
       nodes: [],

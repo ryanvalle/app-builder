@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAppStore } from './store/appStore';
-import { templates } from './templates';
+import { getTemplates } from './templates';
 import Header from './components/Header';
 import TemplateGallery from './components/TemplateGallery';
 import WorkflowEditor from './components/WorkflowEditor';
@@ -12,7 +12,7 @@ function App() {
 
   useEffect(() => {
     // Initialize templates on app load
-    useAppStore.setState({ templates });
+    useAppStore.setState({ templates: getTemplates() });
   }, []);
 
   return (

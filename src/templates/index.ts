@@ -1,7 +1,19 @@
 import { Template } from '../types/workflow';
 
-export const templates: Template[] = [
-  {
+// Helper function to create template with fresh timestamps
+const createTemplate = (template: Omit<Template, 'workflow'> & { 
+  workflow: Omit<Template['workflow'], 'createdAt' | 'updatedAt'> 
+}): Template => ({
+  ...template,
+  workflow: {
+    ...template.workflow,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+});
+
+export const getTemplates = (): Template[] => [
+  createTemplate({
     id: 'template-1',
     name: 'Document Summarizer',
     description: 'Upload a document and get an AI-powered summary',
@@ -46,11 +58,9 @@ export const templates: Template[] = [
         { id: 'e1-2', source: 'input-1', target: 'ai-1' },
         { id: 'e2-3', source: 'ai-1', target: 'output-1' },
       ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     },
-  },
-  {
+  }),
+  createTemplate({
     id: 'template-2',
     name: 'Customer Support Reply Generator',
     description: 'Generate professional customer support responses',
@@ -95,11 +105,9 @@ export const templates: Template[] = [
         { id: 'e1-2', source: 'input-1', target: 'ai-1' },
         { id: 'e2-3', source: 'ai-1', target: 'output-1' },
       ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     },
-  },
-  {
+  }),
+  createTemplate({
     id: 'template-3',
     name: 'Marketing Copy Enhancer',
     description: 'Improve marketing copy with AI suggestions',
@@ -144,11 +152,9 @@ export const templates: Template[] = [
         { id: 'e1-2', source: 'input-1', target: 'ai-1' },
         { id: 'e2-3', source: 'ai-1', target: 'output-1' },
       ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     },
-  },
-  {
+  }),
+  createTemplate({
     id: 'template-4',
     name: 'Personal Task Planner',
     description: 'Break down goals into actionable tasks',
@@ -193,11 +199,9 @@ export const templates: Template[] = [
         { id: 'e1-2', source: 'input-1', target: 'ai-1' },
         { id: 'e2-3', source: 'ai-1', target: 'output-1' },
       ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     },
-  },
-  {
+  }),
+  createTemplate({
     id: 'template-5',
     name: 'Research Assistant with Web Scraping',
     description: 'Fetch data from the web and analyze it with AI',
@@ -232,6 +236,14 @@ export const templates: Template[] = [
               headers: {},
               authType: 'api-key',
               queryParams: { q: '{{input}}' },
+              authConfig: {
+                apiKey: '',
+                apiKeyHeader: 'X-API-Key',
+              },
+              errorHandling: {
+                retries: 3,
+                timeout: 30000,
+              },
             },
           },
         },
@@ -259,8 +271,6 @@ export const templates: Template[] = [
         { id: 'e2-3', source: 'api-1', target: 'ai-1' },
         { id: 'e3-4', source: 'ai-1', target: 'output-1' },
       ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     },
-  },
+  }),
 ];
