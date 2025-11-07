@@ -50,31 +50,82 @@ Pre-built templates to get you started:
 
 ## Getting Started
 
-### Installation
+### Option 1: Docker (Recommended)
 
+The easiest way to get started is using Docker, which avoids dependency installation issues:
+
+**Prerequisites:**
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+**Development:**
+```bash
+# Start the development server
+docker-compose up
+
+# The app will be available at http://localhost:5173
+```
+
+**Production Build:**
+```bash
+# Build production image
+docker build -f Dockerfile.prod -t app-builder:prod .
+
+# Run production container
+docker run -p 80:80 app-builder:prod
+
+# The app will be available at http://localhost
+```
+
+**Docker Commands:**
+```bash
+# Rebuild after code changes
+docker-compose up --build
+
+# Run in detached mode
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop containers
+docker-compose down
+
+# Remove volumes
+docker-compose down -v
+```
+
+### Option 2: Local Installation
+
+If you prefer to run without Docker:
+
+**Prerequisites:**
+- Node.js 20 or higher
+- npm or yarn
+
+**Installation:**
 ```bash
 npm install
 ```
 
-### Development
-
+**Development:**
 ```bash
 npm run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### Build
-
+**Build:**
 ```bash
 npm run build
 ```
 
-### Preview Production Build
-
+**Preview Production Build:**
 ```bash
 npm run preview
 ```
+
+> **Note:** If you encounter `patch-package: command not found` errors during installation, use the Docker option above or install patch-package globally: `npm install -g patch-package`
 
 ## Usage
 
