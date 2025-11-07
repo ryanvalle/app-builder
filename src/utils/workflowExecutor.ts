@@ -171,9 +171,9 @@ async function executeApiCallNode(
           Object.entries(config.responseMapping).forEach(([key, path]) => {
             // Simple path extraction (e.g., "data.result")
             const parts = path.split('.');
-            let value: any = data;
+            let value: unknown = data;
             for (const part of parts) {
-              value = value?.[part];
+              value = (value as Record<string, unknown>)?.[part];
             }
             output[key] = value;
           });
