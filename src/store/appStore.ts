@@ -22,6 +22,15 @@ interface AppState {
   // Console logs
   consoleLogs: Array<{ timestamp: string; level: 'info' | 'error' | 'warning'; message: string }>;
   
+  // Input dialog
+  inputDialog: {
+    isOpen: boolean;
+    nodeId: string | null;
+    label: string;
+    schema: Record<string, unknown> | null;
+    onSubmit: ((value: string) => void) | null;
+  };
+  
   // Actions
   setCurrentWorkflow: (workflow: Workflow | null) => void;
   updateWorkflow: (workflow: Workflow) => void;
@@ -42,6 +51,9 @@ interface AppState {
   
   addConsoleLog: (level: 'info' | 'error' | 'warning', message: string) => void;
   clearConsoleLogs: () => void;
+  
+  openInputDialog: (nodeId: string, label: string, schema: Record<string, unknown> | null, onSubmit: (value: string) => void) => void;
+  closeInputDialog: () => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -53,6 +65,13 @@ export const useAppStore = create<AppState>((set, get) => ({
   currentExecution: null,
   executionHistory: [],
   consoleLogs: [],
+  inputDialog: {
+    isOpen: false,
+    nodeId: null,
+    label: '',
+    schema: null,
+    onSubmit: null,
+  },
   
   setCurrentWorkflow: (workflow) => set({ currentWorkflow: workflow }),
   
@@ -138,4 +157,28 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
   
   clearConsoleLogs: () => set({ consoleLogs: [] }),
+  
+  openInputDialog: (nodeId, label, schema, onSubmit) => {
+    set({
+      inputDialog: {
+        isOpen: true,
+        nodeId,
+        label,
+        schema,
+        onSubmit,
+      },
+    });
+  },
+  
+  closeInputDialog: () => {
+    set({
+      inputDialog: {
+        isOpen: false,
+        nodeId: null,
+        label: '',
+        schema: null,
+        onSubmit: null,
+      },
+    });
+  },
 }));

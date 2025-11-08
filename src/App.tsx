@@ -6,6 +6,7 @@ import TemplateGallery from './components/TemplateGallery';
 import WorkflowEditor from './components/WorkflowEditor';
 import ChatInterface from './components/ChatInterface';
 import ConsolePanel from './components/ConsolePanel';
+import InputDialog from './components/InputDialog';
 
 function App() {
   const { currentWorkflow, editorMode } = useAppStore();
@@ -35,6 +36,8 @@ function App() {
           </>
         )}
       </div>
+      
+      <InputDialog />
     </div>
   );
 }

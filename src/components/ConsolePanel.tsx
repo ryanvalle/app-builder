@@ -4,7 +4,7 @@ import { Play, ChevronDown, ChevronUp, AlertCircle, Info, AlertTriangle, Trash2 
 import { executeNode, buildExecutionOrder, ExecutionContext } from '../utils/workflowExecutor';
 
 const ConsolePanel: React.FC = () => {
-  const { currentWorkflow, consoleLogs, clearConsoleLogs, addConsoleLog } = useAppStore();
+  const { currentWorkflow, consoleLogs, clearConsoleLogs, addConsoleLog, openInputDialog } = useAppStore();
   const [isExpanded, setIsExpanded] = useState(true);
   const [isExecuting, setIsExecuting] = useState(false);
 
@@ -31,7 +31,7 @@ const ConsolePanel: React.FC = () => {
       addConsoleLog('info', `Executing node: ${node.data.label} (${node.type})`);
       
       try {
-        const result = await executeNode(node, context);
+        const result = await executeNode(node, context, openInputDialog);
         
         if (result.success) {
           addConsoleLog('info', `✓ ${node.data.label} completed successfully (${result.duration}ms)`);

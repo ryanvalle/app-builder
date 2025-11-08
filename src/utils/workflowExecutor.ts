@@ -10,12 +10,30 @@ export interface ExecutionContext {
  */
 async function executeInputNode(
   node: WorkflowNode,
-  _context: ExecutionContext
+  _context: ExecutionContext,
+  openInputDialog?: (nodeId: string, label: string, schema: Record<string, unknown> | null, onSubmit: (value: string) => void) => void
 ): Promise<{ success: boolean; output: unknown; error?: string }> {
   try {
-    // For now, return a simulated input based on the input schema
     const schema = node.data.inputSchema as Record<string, unknown>;
     
+    // If openInputDialog is provided, use it to get real user input
+    if (openInputDialog) {
+      return new Promise((resolve) => {
+        openInputDialog(
+          node.id,
+          node.data.label,
+          schema || null,
+          (value: string) => {
+            resolve({
+              success: true,
+              output: value,
+            });
+          }
+        );
+      });
+    }
+    
+    // Fallback to simulated input if no dialog function provided
     if (schema?.type === 'file') {
       return {
         success: true,
@@ -322,14 +340,15 @@ async function executeOutputNode(
  */
 export async function executeNode(
   node: WorkflowNode,
-  context: ExecutionContext
+  context: ExecutionContext,
+  openInputDialog?: (nodeId: string, label: string, schema: Record<string, unknown> | null, onSubmit: (value: string) => void) => void
 ): Promise<{ success: boolean; output: unknown; error?: string; duration: number }> {
   const startTime = Date.now();
   
   let result;
   switch (node.type) {
     case 'input':
-      result = await executeInputNode(node, context);
+      result = await executeInputNode(node, context, openInputDialog);
       break;
     case 'ai-model':
       result = await executeAIModelNode(node, context);

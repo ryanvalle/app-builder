@@ -48,6 +48,9 @@ Each node type has specific configuration options:
 #### Input Node
 - Configure label
 - Set input schema (text, file, multiline)
+- **Interactive Input Dialog**: When workflow executes, a dialog prompts for actual user input
+- Supports text input, multiline text, and file content (paste)
+- User can type or paste real data that flows through the workflow
 
 #### AI Model Node
 - Select AI model (GPT-4, GPT-3.5, Claude, Gemini)
@@ -103,8 +106,10 @@ The execution engine performs real operations for each node type:
 #### What Actually Happens:
 
 **Input Nodes:**
-- Generate sample input data based on schema
-- Real implementation would show user input forms
+- **Display interactive input dialog** when workflow executes
+- User types or pastes actual data
+- Dialog adapts based on schema (single-line text, multiline, or file content)
+- Real user input flows through the workflow to subsequent nodes
 
 **AI Model Nodes:**
 - Process prompts with template variable replacement
@@ -135,10 +140,13 @@ The execution engine performs real operations for each node type:
 **How to test:**
 1. Open a template workflow (e.g., Document Summarizer)
 2. Click "Run Workflow" button in the console panel
-3. Watch real-time execution logs
-4. Each node executes in sequence
-5. Output is displayed with timing information
-6. Errors are highlighted in red if they occur
+3. **Input dialog appears** prompting for data
+4. Type or paste your input (e.g., text to summarize)
+5. Click "Submit"
+6. Watch workflow execute with your actual input
+7. Each node executes in sequence with real data flow
+8. Output is displayed with timing information
+9. Errors are highlighted in red if they occur
 
 ### 5. Console Panel
 **Status:** ✅ Fully Functional
